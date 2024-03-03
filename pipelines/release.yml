@@ -1,0 +1,47 @@
+name: Build Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2.12.0
+      with:
+        channel: 'stable'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Build App Bundle
+      run: flutter build appbundle --release --build-number=${GITHUB_RUN_NUMBER}
+
+    - name: Setup keystore file
+      run: |
+        echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" > key.keystore.asc
+        gpg -d --passphrase "${{ secrets.KEY_STORE_GPG_PASSWORD }}" --batch key.keystore.asc > key.keystore
+
+    - name: Sign AAB
+      run: |
+        jarsigner -verbose -sigalg SHA384withRSA -digestalg SHA-384 \
+          -keystore key.keystore \
+          -storepass ${{ secrets.KEY_STORE_GPG_PASSWORD }} \
+          -keypass ${{ secrets.KEY_STORE_GPG_PASSWORD }} \
+          ./build/app/outputs/bundle/release/app-release.aab \
+          kWindowCalculator
+
+    - name: Upload a generated artifact
+      uses: actions/upload-artifact@v4.3.1
+      with:
+        name: release-aab
+        path: build/app/outputs/bundle/release/app-release.aab
+          
