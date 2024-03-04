@@ -39,6 +39,9 @@ jobs:
           ./build/app/outputs/bundle/release/app-release.aab \
           kWindowCalculator
 
+    - name: Check signature
+      run: jarsigner -verify -verbose -certs ./build/app/outputs/bundle/release/app-release.aab
+      
     - name: Upload a generated artifact
       uses: actions/upload-artifact@v4.3.1
       with:
