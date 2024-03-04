@@ -12,9 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Surface de fenêtres',
+      title: "Surface d'une fenêtre",
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF44618c)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: "Surface d'une fenêtre"),
