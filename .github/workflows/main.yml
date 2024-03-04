@@ -32,15 +32,10 @@ jobs:
 
     - name: Sign AAB
       run: |
-        jarsigner -verbose -sigalg SHA384withRSA -digestalg SHA-384 \
-          -keystore key.keystore \
-          -storepass ${{ secrets.KEY_STORE_GPG_PASSWORD }} \
-          -keypass ${{ secrets.KEY_STORE_GPG_PASSWORD }} \
-          ./build/app/outputs/bundle/release/app-release.aab \
-          kWindowCalculator
+        apksigner sign --ks-key-alias kWindowCalculator --ks key.keystore ./build/app/outputs/bundle/release/app-release.aab
 
     - name: Check signature
-      run: jarsigner -verify -verbose -certs ./build/app/outputs/bundle/release/app-release.aab
+      run: apksigner verify ./build/app/outputs/bundle/release/app-release.aab
       
     - name: Upload a generated artifact
       uses: actions/upload-artifact@v4.3.1
