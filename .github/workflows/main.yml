@@ -25,17 +25,20 @@ jobs:
     - name: Build App Bundle
       run: flutter build appbundle --release --build-number=${GITHUB_RUN_NUMBER}
 
-    - name: Setup keystore file
-      run: |
-        echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" > key.keystore.asc
-        gpg -d --passphrase "${{ secrets.KEY_STORE_GPG_PASSWORD }}" --batch key.keystore.asc > key.keystore
-
-    - name: Sign AAB
-      run: |
-        apksigner sign --ks-key-alias kWindowCalculator --ks key.keystore ./build/app/outputs/bundle/release/app-release.aab
-
-    - name: Check signature
-      run: apksigner verify ./build/app/outputs/bundle/release/app-release.aab
+    - uses: upup-company/apksigner-android@v1
+      name: Sign app APK
+      # ID used to access action output
+      id: sign_app
+      with:
+        releaseDirectory: build/app/outputs/bundle/release
+        signingKeyBase64: ${{ secrets.KEYSTORE_FILE_ANDROID }}
+        alias: kWindowCalculator
+        keyStorePassword: ${{ secrets.KEY_STORE_GPG_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_STORE_GPG_PASSWORD }}
+        customArgs: --v1-signing-enabled,true,--v2-signing-enabled,true
+      env:
+        # override default build-tools version (29.0.3) -- optional
+        BUILD_TOOLS_VERSION: "30.0.2"
       
     - name: Upload a generated artifact
       uses: actions/upload-artifact@v4.3.1
