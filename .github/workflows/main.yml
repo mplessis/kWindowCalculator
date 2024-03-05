@@ -25,19 +25,17 @@ jobs:
     - name: Build App Bundle
       run: flutter build appbundle --release --build-number=${GITHUB_RUN_NUMBER}
 
-    - uses: upup-company/apksigner-android@v1
+    - uses: ilharp/sign-android-release@v1
       name: Sign app APK
       # ID used to access action output
       id: sign_app
       with:
-        releaseDirectory: build/app/outputs/bundle/release
-        signingKeyBase64: ${{ secrets.KEYSTORE_FILE_ANDROID }}
-        alias: kWindowCalculator
+        releaseDir: build/app/outputs/bundle/release
+        signingKey: ${{ secrets.KEYSTORE_FILE_ANDROID }}
+        keyAlias: kWindowCalculator
         keyStorePassword: ${{ secrets.KEY_STORE_GPG_PASSWORD }}
         keyPassword: ${{ secrets.KEY_STORE_GPG_PASSWORD }}
-      env:
-        # override default build-tools version (29.0.3) -- optional
-        BUILD_TOOLS_VERSION: "30.0.2"
+        buildToolsVersion: 33.0.0
       
     - name: Upload a generated artifact
       uses: actions/upload-artifact@v4.3.1
