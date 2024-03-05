@@ -35,7 +35,7 @@ jobs:
         alias: kWindowCalculator
         keyStorePassword: ${{ secrets.KEY_STORE_GPG_PASSWORD }}
         keyPassword: ${{ secrets.KEY_STORE_GPG_PASSWORD }}
-        customArgs: --v1-signing-enabled,true,--v2-signing-enabled,true
+        customArgs: --v2-signing-enabled,true
       env:
         # override default build-tools version (29.0.3) -- optional
         BUILD_TOOLS_VERSION: "30.0.2"
