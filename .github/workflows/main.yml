@@ -30,7 +30,8 @@ jobs:
       id: decode_keystore
       uses: timheuer/base64-to-file@v1
       with:
-        fileName: 'android/app/kwindowcalculator.jks'
+        fileName: 'kwindowcalculator.jks'
+        fileDir: './android/app/'
         encodedString: ${{ secrets.KEYSTORE_FILE_ANDROID }}
         
     - name: Build App Bundle
