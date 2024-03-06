@@ -24,13 +24,13 @@ jobs:
       
     - name: Setup signing files
       run: |
-        echo "${{ secrets.KEY_PROPERTIES }}" > key.properties
+        echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties
         
     - name: Decode Keystore
       id: decode_keystore
       uses: timheuer/base64-to-file@v1
       with:
-        fileName: 'kWindowCalculator.keystore'
+        fileName: 'android/app/kwindowcalculator.jks'
         encodedString: ${{ secrets.KEYSTORE_FILE_ANDROID }}
         
     - name: Build App Bundle
